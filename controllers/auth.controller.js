@@ -39,7 +39,7 @@ export const login = async (req, res, next) => {
       sameSite: "none",
       httpOnly: true,
       secure: true,
-      domain: "API_DOMAIN",
+      domain: "https://freelancer-api-o9p0.onrender.com",
     });
     res.status(200).send(info);
   } catch (err) {

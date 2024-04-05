@@ -1,8 +1,8 @@
 import express from "express";
 import { verifyToken } from "../middleware/jwt.js";
 import {
-    createMessage,
-    getMessages
+  createMessage,
+  getMessages,
 } from "../controllers/message.controller.js";
 
 const router = express.Router();
