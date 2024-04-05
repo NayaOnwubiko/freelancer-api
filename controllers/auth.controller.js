@@ -5,7 +5,8 @@ import createError from "../utils/createError.js";
 
 export const register = async (req, res, next) => {
   try {
-    const hash = bcrypt.hashSync(req.body.password, 5);
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(req.body.password, salt);
     const newUser = new User({
       ...req.body,
       password: hash,
@@ -17,14 +18,15 @@ export const register = async (req, res, next) => {
     next(err);
   }
 };
-
 export const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ username: req.body.username });
-    if (!user) return next(createError(404, "User not found"));
+
+    if (!user) return next(createError(404, "User not found!"));
 
     const isCorrect = bcrypt.compareSync(req.body.password, user.password);
-    if (!isCorrect) return next(createError(404, "Wrong Username or Password"));
+    if (!isCorrect)
+      return next(createError(400, "Wrong password or username!"));
 
     const token = jwt.sign(
       {
@@ -35,15 +37,19 @@ export const login = async (req, res, next) => {
     );
 
     const { password, ...info } = user._doc;
-    res.cookie("accessToken", token, {
-      httpOnly: true,
-    });
-    res.status(200).send(info);
+    res
+      .cookie("accessToken", token, {
+        sameSite: "none",
+        httpOnly: true,
+        secure: true,
+        domain: "https://freelancer-api-o9p0.onrender.com/api/",
+      })
+      .status(200)
+      .send(info);
   } catch (err) {
     next(err);
   }
 };
-
 export const logout = async (req, res) => {
   res
     .clearCookie("accessToken", {
@@ -51,5 +57,5 @@ export const logout = async (req, res) => {
       secure: true,
     })
     .status(200)
-    .send("User has been logged out");
+    .send("User has been logged out!");
 };
