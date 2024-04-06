@@ -42,7 +42,7 @@ export const login = async (req, res, next) => {
         sameSite: "none",
         httpOnly: true,
         secure: true,
-        domain: process.env.API_DOMAIN,
+        domain: "https://freelancer-ca.vercel.app",
       })
       .status(200)
       .send(info);
