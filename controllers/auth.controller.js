@@ -39,10 +39,10 @@ export const login = async (req, res, next) => {
     const { password, ...info } = user._doc;
     res
       .cookie("accessToken", token, {
-        sameSite: "none",
+        // sameSite: "none",
         httpOnly: true,
-        secure: true,
-        domain: "https://freelancer-api-o9p0.onrender.com/api/",
+        // secure: true,
+        // domain: "https://freelancer-api-o9p0.onrender.com/api/",
       })
       .status(200)
       .send(info);
